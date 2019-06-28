@@ -99,7 +99,7 @@ def fine_border(img,area,area_roi):
     dot.ok = 0
 ```
 
-发送的数据， 貌似上部分代码没用到
+发送的数据,包含flag用于记录ROI区域找到的线
 ```python
 # rho_err线到(0,0)的距离
 # theta_err线的角度

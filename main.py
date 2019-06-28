@@ -255,21 +255,21 @@ def found_line(img):
 
 
 def check_line(img):
-    # ------------------------------------ 好像没用到
-    #fine_border(img,up,up_roi)
-    #fine_border(img,down,down_roi)
-    #fine_border(img,left,left_roi)
-    #fine_border(img,righ,righ_roi)
+    # ------------------------------------ 用到了，通过line.flag
+    fine_border(img,up,up_roi)
+    fine_border(img,down,down_roi)
+    fine_border(img,left,left_roi)
+    fine_border(img,righ,righ_roi)
 
-    #line.flag = 0
-    #if up.ok:
-        #line.flag = line.flag | 0x01
-    #if down.ok:
-        #line.flag = line.flag | 0x02
-    #if left.ok:
-        #line.flag = line.flag | 0x04
-    #if righ.ok:
-        #line.flag = line.flag | 0x08
+    line.flag = 0
+    if up.ok:
+        line.flag = line.flag | 0x01
+    if down.ok:
+        line.flag = line.flag | 0x02
+    if left.ok:
+        line.flag = line.flag | 0x04
+    if righ.ok:
+        line.flag = line.flag | 0x08
     #print(line.flag)
     # ------------------------------------
     found_line(img)
