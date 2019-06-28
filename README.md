@@ -29,6 +29,8 @@ while(True):
     uart_read_buf()
 ```
 
+1. 工作模式一
+
 * 修改代码，查看最大点的坐标以及总的像素数目。`thresholds = [0, 90]#自定义灰度阈值`
 ```python
 #点检测函数
@@ -54,4 +56,52 @@ def check_dot(img):
     print(dot.x,dot.y,dot.num,dot.flag)
     #发送数据
     uart.write(pack_dot_data())
+```
+
+2. 工作模式二
+
+默认`THRESHOLD = (0,100)`， 应该是0-100的像素为设置为255
+```python
+img = sensor.snapshot().binary([THRESHOLD])
+```
+
+Line类继承于Dot增加了角度属性
+```python
+class Dot(object):
+    x = 0
+    y = 0
+    pixels = 0
+    num = 0
+    ok = 0
+    flag = 0
+
+class Line(Dot):
+    x_angle = 0
+    y_angle = 0
+```
+
+添加打印代码，查看各个ROI区域找到的线
+```python
+def fine_border(img,area,area_roi):
+    line = img.get_regression([(255,255)],roi=area_roi, robust = True)
+    # 例如：line: {"x1":67, "y1":0, "x2":67, "y2":39, "length":39, "magnitude":12, "theta":0, "rho":67}
+    # x1 y1 x2 y2分别代表线段的两个顶点坐标，length是线段长度，theta是线段的角度。
+    # magnitude表示线性回归的效果，它是（0，+∞）范围内的一个数字，其中0代表一个圆。如果场景线性回归的越好，这个值越大。
+    # y向下，x向右
+    print("line:",line)
+    if (line):
+        area.ok=1
+    #判断标志位
+    dot.flag = dot.ok
+    #清零标志位
+
+    #dot.pixels = 0
+    dot.ok = 0
+```
+
+发送的数据， 貌似上部分代码没用到
+```python
+# rho_err线到(0,0)的距离
+# theta_err线的角度
+print(singleline_check.rho_err,singleline_check.theta_err )
 ```

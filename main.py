@@ -55,7 +55,7 @@ class receive(object):
 R=receive()
 
 class ctrl(object):
-    work_mode = 0x01 #工作模式.默认是点检测，可以通过串口设置成其他模式
+    work_mode = 0x02 #工作模式.默认是点检测，可以通过串口设置成其他模式
     check_show = 1   #开显示，在线调试时可以打开，离线使用请关闭，可提高计算速度
 
 ctr=ctrl()
@@ -231,6 +231,7 @@ def check_dot(img):
 def fine_border(img,area,area_roi):
 
     line = img.get_regression([(255,255)],roi=area_roi, robust = True)
+    # print("line:",line)
     if (line):
         area.ok=1
     #判断标志位
@@ -254,27 +255,32 @@ def found_line(img):
 
 
 def check_line(img):
-    fine_border(img,up,up_roi)
-    fine_border(img,down,down_roi)
-    fine_border(img,left,left_roi)
-    fine_border(img,righ,righ_roi)
+    # ------------------------------------ 好像没用到
+    #fine_border(img,up,up_roi)
+    #fine_border(img,down,down_roi)
+    #fine_border(img,left,left_roi)
+    #fine_border(img,righ,righ_roi)
 
-    line.flag = 0
-    if up.ok:
-        line.flag = line.flag | 0x01
-    if down.ok:
-        line.flag = line.flag | 0x02
-    if left.ok:
-        line.flag = line.flag | 0x04
-    if righ.ok:
-        line.flag = line.flag | 0x08
+    #line.flag = 0
+    #if up.ok:
+        #line.flag = line.flag | 0x01
+    #if down.ok:
+        #line.flag = line.flag | 0x02
+    #if left.ok:
+        #line.flag = line.flag | 0x04
+    #if righ.ok:
+        #line.flag = line.flag | 0x08
     #print(line.flag)
-
+    # ------------------------------------
     found_line(img)
 
     up.ok = down.ok = left.ok = righ.ok = 0
     up.num = down.num = left.num = righ.num = 0
     up.pixels = down.pixels = left.pixels = righ.pixels = 0
+
+    # rho_err线到(0,0)的距离
+    # theta_err线的角度
+    print(singleline_check.rho_err,singleline_check.theta_err )
 
     #发送数据
     uart.write(pack_line_data())
